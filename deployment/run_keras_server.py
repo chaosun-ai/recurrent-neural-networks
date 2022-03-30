@@ -11,13 +11,9 @@ app = Flask(__name__)
 class ReusableForm(Form):
     """User entry form for entering specifics for generation"""
     # Starting seed
-    seed = TextField("Enter a seed string or 'random':", validators=[
+    seed = TextField("Please Enter a word, for example 'machine':", validators=[
                      validators.InputRequired()])
-    # Diversity of predictions
-    diversity = DecimalField('Enter diversity:', default=0.8,
-                             validators=[validators.InputRequired(),
-                                         validators.NumberRange(min=0.5, max=5.0,
-                                                                message='Diversity must be between 0.5 and 5.')])
+
     # Number of words
     words = IntegerField('Enter number of words to generate:',
                          default=50, validators=[validators.InputRequired(),
@@ -29,10 +25,11 @@ class ReusableForm(Form):
 def load_keras_model():
     """Load in the pre-trained model"""
     global model
-    model = load_model('../models/train-embeddings-rnn.h5')
+    model = load_model('../models/train-embeddings-rnn-2-layers.h5')
     # Required for model to work
-    global graph
-    graph = tf.get_default_graph()
+    #global graph
+    #graph = tf.compat.v1.get_default_graph()
+    #graph = tf.get_default_graph()
 
 
 # Home page
@@ -46,14 +43,14 @@ def home():
     if request.method == 'POST' and form.validate():
         # Extract information
         seed = request.form['seed']
-        diversity = float(request.form['diversity'])
+        #diversity = float(request.form['diversity'])
+        diversity=0.8
         words = int(request.form['words'])
         # Generate a random sequence
-        if seed == 'random':
-            return render_template('random.html', input=generate_random_start(model=model, graph=graph, new_words=words, diversity=diversity))
-        # Generate starting from a seed sequence
-        else:
-            return render_template('seeded.html', input=generate_from_seed(model=model, graph=graph, seed=seed, new_words=words, diversity=diversity))
+
+        #return render_template('seeded.html', input=generate_from_seed(model=model, graph=graph, seed=seed, new_words=words, diversity=diversity))
+        return render_template('seeded.html',input=generate_from_seed(model=model, seed=seed, new_words=words,
+                                                            diversity=diversity))
     # Send template information to index.html
     return render_template('index.html', form=form)
 

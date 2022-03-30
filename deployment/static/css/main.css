@@ -41,7 +41,7 @@ body {
 
   h1 { 
     font-family: none;
-    color: darkslategray;
+    color: dark;
     display: block;
     font-size: 48px;
     margin-top: 8px;
@@ -164,9 +164,9 @@ form input#submit:hover{
 
 /* Message flashing */
 .flash {
-    background-color: #FBB0B0;
+    background-color: #e0d5d5;
     padding: 10px;
-    width: 400px;
+    width: 600px;
     display: table;
     margin: auto;
   }
